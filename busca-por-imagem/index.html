@@ -3,392 +3,505 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Busca por Imagem</title>
-<meta name="description" content="Envie a foto de um papel de parede e encontre os modelos mais parecidos da coleção.">
+<title>Catálogo de Papéis de Parede</title>
+<meta name="description" content="Coleção de papéis de parede sob medida. Navegue por categorias, busque por nome ou cor.">
+<style>
+  :root {
+    --verde: #2f4a3c; --verde-claro: #5c7a68; --areia: #f5f2ea; --areia-card: #fff;
+    --tinta: #2a2a26; --tinta-suave: #6b6b63; --linha: #e3ded3; --dourado: #b89b5e;
+    --sombra: 0 2px 12px rgba(47,74,60,0.08); --sombra-hover: 0 10px 30px rgba(47,74,60,0.18);
+    --raio: 14px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Albert Sans', -apple-system, 'Segoe UI', Roboto, sans-serif; background: var(--areia); color: var(--tinta); line-height: 1.5; -webkit-font-smoothing: antialiased; }
+  h1, h2, h3, .serif { font-family: 'Marcellus', Georgia, serif; font-weight: 400; letter-spacing: 0.01em; }
+
+  /* ===== Cabeçalho fixo ===== */
+  header { position: sticky; top: 0; z-index: 50; background: rgba(245,242,234,0.96); backdrop-filter: blur(10px); border-bottom: 1px solid var(--linha); }
+  .topo { max-width: 1280px; margin: 0 auto; padding: 12px 20px; display: flex; align-items: center; gap: 12px; }
+  .btn-icone { width: 42px; height: 42px; border-radius: 50%; border: 1px solid var(--linha); background: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 18px; color: var(--tinta); flex-shrink: 0; transition: all .2s; position: relative; }
+  .btn-icone:hover { border-color: var(--verde-claro); background: #fafaf7; }
+  .btn-icone.ativo { background: var(--verde); color: #fff; border-color: var(--verde); }
+  .btn-icone svg { width: 20px; height: 20px; }
+  .titulo-topo { flex: 1; text-align: center; font-size: 20px; color: var(--verde); }
+  @media (max-width: 600px) { .titulo-topo.mobile-hide { display: none; } }
+  .busca-expandida { flex: 1; display: none; }
+  .busca-expandida.aberta { display: block; }
+  .busca-expandida input { width: 100%; padding: 10px 16px; border: 1px solid var(--linha); border-radius: 999px; font-size: 15px; }
+  .busca-expandida input:focus { outline: none; border-color: var(--verde-claro); }
+  .contador-fav-badge { position: absolute; top: -2px; right: -2px; background: var(--dourado); color: #fff; border-radius: 999px; font-size: 10px; min-width: 17px; height: 17px; display: flex; align-items: center; justify-content: center; padding: 0 4px; font-weight: 600; }
+
+  /* Painel de filtros (abre ao clicar no funil) */
+  .painel-filtros { max-width: 1280px; margin: 0 auto; padding: 0 20px; max-height: 0; overflow: hidden; transition: max-height .3s, padding .3s; }
+  .painel-filtros.aberto { max-height: 300px; padding: 0 20px 14px; }
+  .filtro-linha-2 { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+  .filtro-rotulo { font-size: 12px; color: var(--tinta-suave); text-transform: uppercase; letter-spacing: .5px; width: 100%; margin: 8px 0 2px; }
+  .cores-filtro { display: flex; gap: 5px; flex-wrap: wrap; }
+  .bolinha { width: 26px; height: 26px; border-radius: 50%; cursor: pointer; border: 2px solid #fff; box-shadow: 0 0 0 1px var(--linha); transition: transform .15s; }
+  .bolinha:hover { transform: scale(1.15); }
+  .bolinha.ativo { box-shadow: 0 0 0 2px var(--verde); transform: scale(1.1); }
+
+  /* ===== Breadcrumb ===== */
+  .trilha { max-width: 1280px; margin: 0 auto; padding: 14px 20px 0; font-size: 14px; color: var(--tinta-suave); }
+  .trilha a { color: var(--verde); cursor: pointer; text-decoration: none; }
+  .trilha a:hover { text-decoration: underline; }
+
+  main { max-width: 1280px; margin: 0 auto; padding: 16px 20px 90px; }
+
+  /* ===== Cards de capa (navegação) ===== */
+  .grade-capas { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+  @media (max-width: 600px) { .grade-capas { grid-template-columns: 1fr; } }
+  .card-capa { position: relative; border-radius: var(--raio); overflow: hidden; cursor: pointer; aspect-ratio: 3/4; border: 1px solid var(--linha); background: linear-gradient(160deg, #d8d2c5, #b8b0a0); box-shadow: var(--sombra); transition: transform .25s, box-shadow .25s; }
+  .card-capa:hover { transform: translateY(-3px); box-shadow: var(--sombra-hover); }
+  .card-capa img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .card-capa .overlay { position: absolute; inset: 0; display: flex; align-items: flex-end; padding: 18px; background: linear-gradient(to top, rgba(0,0,0,0.55), transparent 55%); }
+  .card-capa .nome-capa { color: #fff; font-family: 'Marcellus', serif; font-size: 24px; }
+  .card-capa .icone-canto { position: absolute; top: 14px; left: 14px; width: 42px; height: 42px; border-radius: 11px; background: rgba(255,255,255,0.22); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; color: #fff; }
+  .card-capa .qtd { position: absolute; top: 14px; right: 14px; background: rgba(0,0,0,0.5); color: #fff; font-size: 12px; padding: 3px 10px; border-radius: 999px; }
+
+  /* ===== Grade de produtos ===== */
+  .resultado-info { color: var(--tinta-suave); font-size: 14px; margin-bottom: 16px; }
+  .grade { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; align-items: start; }
+  @media (max-width: 900px) { .grade { grid-template-columns: repeat(2, 1fr); gap: 16px; } }
+  @media (max-width: 600px) { .grade { grid-template-columns: 1fr; } }
+
+  .card { background: var(--areia-card); border: 1px solid var(--linha); border-radius: var(--raio); overflow: hidden; box-shadow: var(--sombra); transition: box-shadow .25s, transform .25s; display: flex; flex-direction: column; }
+  .card:hover { box-shadow: var(--sombra-hover); transform: translateY(-2px); }
+  .palco { position: relative; aspect-ratio: 1/1; background: var(--areia); cursor: zoom-in; overflow: hidden; }
+  .palco img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+  .palco .placeholder { position: absolute; inset: 0; width: 100%; height: 100%; background: var(--areia); }
+  .palco .seta { position: absolute; top: 50%; transform: translateY(-50%); width: 34px; height: 34px; border-radius: 50%; border: none; background: rgba(255,255,255,0.9); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 20px; color: var(--tinta); opacity: 0; transition: opacity .2s; z-index: 2; }
+  .palco:hover .seta { opacity: 1; }
+  .palco .seta.esq { left: 8px; } .palco .seta.dir { right: 8px; }
+  .badge-tipo { position: absolute; top: 10px; left: 10px; background: rgba(42,42,38,0.72); color: #fff; font-size: 11px; padding: 3px 9px; border-radius: 6px; }
+  .contador-img { position: absolute; bottom: 10px; right: 10px; background: rgba(42,42,38,0.72); color: #fff; font-size: 11px; padding: 3px 9px; border-radius: 6px; }
+  .btn-coracao { position: absolute; top: 8px; right: 8px; width: 36px; height: 36px; border-radius: 50%; border: none; background: rgba(255,255,255,0.92); cursor: pointer; font-size: 18px; display: flex; align-items: center; justify-content: center; z-index: 2; transition: transform .15s; }
+  .btn-coracao:hover { transform: scale(1.1); } .btn-coracao.fav { color: #d6455d; }
+  .thumbs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; }
+  .thumb { position: relative; aspect-ratio: 1; border-radius: 6px; cursor: pointer; overflow: hidden; border: 2px solid transparent; opacity: .65; transition: opacity .15s; min-width: 0; }
+  .thumb img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .thumb.ativo { border-color: var(--verde); opacity: 1; }
+  .thumb.t-vazio { visibility: hidden; cursor: default; }
+  .rodape-card { padding: 8px 14px 14px; }
+  .nome-modelo { font-size: 19px; color: var(--tinta); margin-top: 8px; line-height: 1.2; min-height: 2.4em; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .cats-card { font-size: 12px; color: var(--tinta-suave); }
+  .pub-tag { color: var(--dourado); }
+
+  .vazio { text-align: center; padding: 80px 20px; color: var(--tinta-suave); }
+  .vazio h3 { font-size: 24px; color: var(--tinta); margin-bottom: 8px; }
+  .carregando { text-align: center; padding: 80px; color: var(--tinta-suave); }
+
+  /* ===== Modal ===== */
+  .modal { position: fixed; inset: 0; z-index: 100; background: rgba(26,30,28,0.93); display: none; align-items: center; justify-content: center; padding: 20px; }
+  .modal.aberto { display: flex; }
+  .modal-conteudo { position: relative; max-width: 1100px; width: 100%; max-height: 92vh; display: flex; flex-direction: column; align-items: center; }
+  .modal-img-wrap { position: relative; width: 100%; flex: 1; min-height: 0; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+  .modal-img { max-width: 100%; max-height: 78vh; object-fit: contain; border-radius: 8px; cursor: zoom-in; transition: transform .15s; }
+  .modal-img.zoom { cursor: move; }
+  .modal .seta-modal { position: absolute; top: 50%; transform: translateY(-50%); width: 48px; height: 48px; border-radius: 50%; border: none; background: rgba(255,255,255,0.15); color: #fff; cursor: pointer; font-size: 26px; display: flex; align-items: center; justify-content: center; transition: background .2s; }
+  .modal .seta-modal:hover { background: rgba(255,255,255,0.3); }
+  .modal .seta-modal.esq { left: 10px; } .modal .seta-modal.dir { right: 10px; }
+  .modal-barra { display: flex; align-items: center; gap: 12px; margin-top: 14px; flex-wrap: wrap; justify-content: center; }
+  .modal-titulo { color: #fff; font-family: 'Marcellus', serif; font-size: 24px; flex-basis: 100%; text-align: center; }
+  .btn-modal { display: inline-flex; align-items: center; gap: 7px; padding: 10px 18px; border: 1px solid rgba(255,255,255,0.3); background: rgba(255,255,255,0.1); color: #fff; border-radius: 999px; cursor: pointer; font-size: 14px; transition: background .2s; }
+  .btn-modal:hover { background: rgba(255,255,255,0.2); } .btn-modal.fav { color: #ff8fa0; border-color: #ff8fa0; }
+  .modal-fechar { position: absolute; top: -6px; right: -6px; width: 40px; height: 40px; border-radius: 50%; border: none; background: #fff; color: var(--tinta); cursor: pointer; font-size: 20px; z-index: 5; }
+  .modal-contador { color: rgba(255,255,255,0.7); font-size: 13px; }
+
+  /* ===== Barra favoritos (download) ===== */
+  .barra-fav { position: fixed; bottom: 0; left: 0; right: 0; z-index: 60; background: var(--verde); color: #fff; padding: 14px 20px; display: none; align-items: center; justify-content: space-between; gap: 14px; flex-wrap: wrap; box-shadow: 0 -2px 16px rgba(0,0,0,0.2); }
+  .barra-fav.visivel { display: flex; }
+  .btn-baixar-fav { padding: 10px 22px; border-radius: 999px; border: none; background: #fff; color: var(--verde); font-weight: 600; cursor: pointer; font-size: 14px; }
+  .btn-baixar-fav:hover { background: #f0ede5; }
+  .btn-limpar-fav { padding: 10px 18px; border-radius: 999px; border: 1px solid rgba(255,255,255,0.4); background: rgba(255,255,255,0.12); color: #fff; cursor: pointer; font-size: 14px; }
+
+  .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); }
+</style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Marcellus&family=Albert+Sans:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cropperjs@1.6.1/dist/cropper.min.css">
-<script src="https://cdn.jsdelivr.net/npm/cropperjs@1.6.1/dist/cropper.min.js"></script>
-<style>
-  :root{
-    --verde:#2f4a3c; --verde-claro:#5c7a68; --areia:#f5f2ea; --areia-card:#fff;
-    --tinta:#2a2a26; --tinta-suave:#6b6b63; --linha:#e3ded3; --dourado:#b89b5e;
-    --sombra:0 2px 12px rgba(47,74,60,0.08); --sombra-hover:0 10px 30px rgba(47,74,60,0.18);
-    --raio:14px;
-  }
-  *{box-sizing:border-box;margin:0;padding:0}
-  html{scroll-behavior:smooth}
-  body{font-family:'Albert Sans',-apple-system,'Segoe UI',Roboto,sans-serif;background:var(--areia);color:var(--tinta);line-height:1.5;-webkit-font-smoothing:antialiased}
-  h1,h2,h3,.serif{font-family:'Marcellus',Georgia,serif;font-weight:400;letter-spacing:.01em}
-
-  header{position:sticky;top:0;z-index:50;background:rgba(245,242,234,0.96);backdrop-filter:blur(10px);border-bottom:1px solid var(--linha)}
-  .topo{max-width:1280px;margin:0 auto;padding:12px 20px;display:flex;align-items:center;gap:12px}
-  .btn-icone{width:42px;height:42px;border-radius:50%;border:1px solid var(--linha);background:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:18px;color:var(--tinta);flex-shrink:0;transition:all .2s;text-decoration:none}
-  .btn-icone:hover{border-color:var(--verde-claro);background:#fafaf7}
-  .btn-icone svg{width:20px;height:20px}
-  .titulo-topo{flex:1;text-align:center;font-size:20px;color:var(--verde)}
-
-  main{max-width:1100px;margin:0 auto;padding:22px 20px 90px}
-  .intro{text-align:center;color:var(--tinta-suave);font-size:15px;max-width:60ch;margin:0 auto 22px}
-
-  /* status de carregamento */
-  .boot{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;font-size:12.5px;color:var(--tinta-suave);margin-bottom:20px}
-  .boot.oculto{display:none}
-  .boot .it{display:flex;align-items:center;gap:7px}
-  .pt{width:8px;height:8px;border-radius:50%;background:#c3bcae}
-  .pt.go{background:var(--verde-claro)}.pt.busy{background:var(--dourado);animation:pulsa 1s infinite}.pt.err{background:#c0593e}
-  @keyframes pulsa{0%,100%{opacity:1}50%{opacity:.3}}
-
-  /* upload */
-  .drop{background:var(--areia-card);border:1.5px dashed #cfc7b6;border-radius:var(--raio);padding:46px 24px;text-align:center;cursor:pointer;transition:.15s;box-shadow:var(--sombra)}
-  .drop:hover,.drop.over{border-color:var(--verde-claro);background:#fffdf9}
-  .drop .ic{font-size:30px;opacity:.55}
-  .drop h2{font-size:20px;margin:12px 0 4px;color:var(--verde)}
-  .drop p{color:var(--tinta-suave);font-size:13.5px}
-  input[type=file]{display:none}
-
-  .cropzone{display:none;background:var(--areia-card);border:1px solid var(--linha);border-radius:var(--raio);padding:18px;box-shadow:var(--sombra)}
-  .cropzone.on{display:block}
-  .crop-instr{display:flex;gap:10px;align-items:flex-start;background:#eef1ea;border-radius:10px;padding:11px 14px;margin-bottom:14px;font-size:13.5px;color:var(--verde)}
-  .crop-instr b{color:var(--tinta)}
-  .crop-hold{max-height:60vh;overflow:hidden;border-radius:10px;background:var(--areia)}
-  .crop-hold img{max-width:100%;display:block}
-  .crop-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
-  button.acao{font-family:'Albert Sans',sans-serif;font-size:14px;font-weight:500;cursor:pointer;border-radius:999px;padding:11px 22px;border:1px solid var(--linha);background:#fff;color:var(--tinta);transition:.13s}
-  button.acao:hover:not(:disabled){border-color:var(--verde-claro)}
-  button.acao:disabled{opacity:.5;cursor:not-allowed}
-  button.acao.primaria{background:var(--verde);border-color:var(--verde);color:#fff}
-  button.acao.primaria:hover:not(:disabled){background:#26402F}
-
-  /* calibração (debug) */
-  .calib{display:none;flex-direction:column;gap:12px;background:#eef1ea;border:1px solid var(--linha);border-radius:12px;padding:14px 18px;margin:20px 0 6px;font-size:13px}
-  .calib.on{display:flex}
-  .calib .tag{font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--tinta-suave);border:1px solid var(--linha);padding:2px 8px;border-radius:99px;align-self:flex-start}
-  .entendeu{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
-  .entendeu .k{color:var(--tinta-suave);font-size:12px}
-  .chip{background:#fff;border:1px solid var(--linha);border-radius:99px;padding:4px 11px;font-size:12px}
-  .chip b{color:var(--verde)}
-
-  .res-info{color:var(--tinta-suave);font-size:14px;margin:22px 2px 14px}
-  .grade{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;align-items:start}
-  @media(max-width:900px){.grade{grid-template-columns:repeat(2,1fr);gap:16px}}
-  @media(max-width:600px){.grade{grid-template-columns:1fr}}
-
-  .card{background:var(--areia-card);border:1px solid var(--linha);border-radius:var(--raio);overflow:hidden;box-shadow:var(--sombra);transition:box-shadow .25s,transform .25s;display:flex;flex-direction:column}
-  .card:hover{box-shadow:var(--sombra-hover);transform:translateY(-2px)}
-  .palco{position:relative;aspect-ratio:1/1;background:var(--areia);cursor:zoom-in;overflow:hidden}
-  .palco img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
-  .badge-tipo{position:absolute;top:10px;left:10px;background:rgba(42,42,38,0.72);color:#fff;font-size:11px;padding:3px 9px;border-radius:6px}
-  .afinidade{position:absolute;top:10px;left:10px;background:rgba(47,74,60,0.82);color:#fff;font-size:11px;padding:3px 9px;border-radius:6px;display:none}
-  .afinidade.on{display:block}
-  .btn-coracao{position:absolute;top:8px;right:8px;width:36px;height:36px;border-radius:50%;border:none;background:rgba(255,255,255,0.92);cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;z-index:2;transition:transform .15s}
-  .btn-coracao:hover{transform:scale(1.1)}.btn-coracao.fav{color:#d6455d}
-  .rodape-card{padding:10px 14px 14px}
-  .nome-modelo{font-size:19px;color:var(--tinta);line-height:1.2}
-  .cats-card{font-size:12px;color:var(--tinta-suave);margin-top:2px}
-
-  .vazio{text-align:center;padding:70px 20px;color:var(--tinta-suave)}
-  .vazio h3{font-size:22px;color:var(--tinta);margin-bottom:8px}
-
-  /* modal (igual ao catálogo) */
-  .modal{position:fixed;inset:0;z-index:100;background:rgba(26,30,28,0.93);display:none;align-items:center;justify-content:center;padding:20px}
-  .modal.aberto{display:flex}
-  .modal-conteudo{position:relative;max-width:1100px;width:100%;max-height:92vh;display:flex;flex-direction:column;align-items:center}
-  .modal-img-wrap{position:relative;width:100%;flex:1;min-height:0;display:flex;align-items:center;justify-content:center;overflow:hidden}
-  .modal-img{max-width:100%;max-height:78vh;object-fit:contain;border-radius:8px;cursor:zoom-in;transition:transform .15s}
-  .modal-img.zoom{cursor:move}
-  .modal .seta-modal{position:absolute;top:50%;transform:translateY(-50%);width:48px;height:48px;border-radius:50%;border:none;background:rgba(255,255,255,0.15);color:#fff;cursor:pointer;font-size:26px;display:flex;align-items:center;justify-content:center;transition:background .2s}
-  .modal .seta-modal:hover{background:rgba(255,255,255,0.3)}
-  .modal .seta-modal.esq{left:10px}.modal .seta-modal.dir{right:10px}
-  .modal-barra{display:flex;align-items:center;gap:12px;margin-top:14px;flex-wrap:wrap;justify-content:center}
-  .modal-titulo{color:#fff;font-family:'Marcellus',serif;font-size:24px;flex-basis:100%;text-align:center}
-  .btn-modal{display:inline-flex;align-items:center;gap:7px;padding:10px 18px;border:1px solid rgba(255,255,255,0.3);background:rgba(255,255,255,0.1);color:#fff;border-radius:999px;cursor:pointer;font-size:14px;transition:background .2s}
-  .btn-modal:hover{background:rgba(255,255,255,0.2)}.btn-modal.fav{color:#ff8fa0;border-color:#ff8fa0}
-  .modal-fechar{position:absolute;top:-6px;right:-6px;width:40px;height:40px;border-radius:50%;border:none;background:#fff;color:var(--tinta);cursor:pointer;font-size:20px;z-index:5}
-  .modal-contador{color:rgba(255,255,255,0.7);font-size:13px}
-</style>
 </head>
 <body>
 
 <header>
   <div class="topo">
-    <a class="btn-icone" href="../" aria-label="Voltar ao catálogo" title="Voltar ao catálogo">
+    <button class="btn-icone" id="btn-voltar" onclick="voltar()" aria-label="Voltar" title="Voltar">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
-    </a>
-    <h1 class="titulo-topo">Busca por Imagem</h1>
-    <span style="width:42px"></span>
+    </button>
+    <h1 class="titulo-topo mobile-hide" id="titulo-topo">Catálogo de Papéis de Parede</h1>
+    <div class="busca-expandida" id="busca-expandida">
+      <input type="text" id="busca" placeholder="Buscar por nome, estampa, cor..." aria-label="Buscar">
+    </div>
+    <button class="btn-icone" id="btn-busca" onclick="toggleBusca()" aria-label="Buscar" title="Buscar">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg>
+    </button>
+    <button class="btn-icone" id="btn-filtros" onclick="toggleFiltros()" aria-label="Filtros" title="Filtros">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 5h18M6 12h12M10 19h4"/></svg>
+    </button>
+    <button class="btn-icone" id="btn-favoritos" onclick="toggleVerFavoritos()" aria-label="Favoritos" title="Favoritos">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+      <span class="contador-fav-badge" id="cont-fav" style="display:none">0</span>
+    </button>
+  </div>
+  <div class="painel-filtros" id="painel-filtros">
+    <div class="filtro-linha-2">
+      <span class="filtro-rotulo">Filtrar por cor</span>
+      <div class="cores-filtro" id="cores-filtro"></div>
+    </div>
   </div>
 </header>
 
-<main>
-  <p class="intro">Tem uma foto de um papel de parede que você gostou? Envie a imagem, recorte a estampa e nós encontramos os modelos mais parecidos da coleção.</p>
+<div class="trilha" id="trilha"></div>
 
-  <div class="boot" id="boot">
-    <div class="it"><span class="pt" id="ptCat"></span><span id="txCat">Catálogo</span></div>
-    <div class="it"><span class="pt" id="ptEmb"></span><span id="txEmb">Índice visual</span></div>
-    <div class="it"><span class="pt" id="ptMod"></span><span id="txMod">Reconhecimento</span></div>
-  </div>
-
-  <div class="drop" id="drop">
-    <div class="ic">🖼️</div>
-    <h2>Toque para enviar uma foto</h2>
-    <p>ou arraste a imagem para cá</p>
-    <input type="file" id="arqFoto" accept="image/*">
-  </div>
-
-  <div class="cropzone" id="cropzone">
-    <div class="crop-instr"><span>✂️</span><div>Arraste para selecionar <b>somente a área do papel de parede</b> — sem móveis, quadros ou pessoas. Quanto mais limpa a estampa, mais certeira a busca.</div></div>
-    <div class="crop-hold"><img id="cropImg" alt=""></div>
-    <div class="crop-actions">
-      <button class="acao primaria" id="btnBuscar">Buscar modelos parecidos</button>
-      <button class="acao" id="btnTrocar">Trocar foto</button>
-    </div>
-  </div>
-
-  <div class="calib" id="calib">
-    <span class="tag">Calibração · uso interno (?debug=1)</span>
-    <div class="entendeu" id="entendeu"></div>
-  </div>
-
-  <div id="saida"></div>
+<main id="conteudo">
+  <div class="carregando">Carregando catálogo…</div>
 </main>
 
-<!-- Modal (idêntico ao catálogo) -->
-<div class="modal" id="modal">
+<!-- Modal -->
+<div class="modal" id="modal" onclick="if(event.target===this) fecharModal()">
   <div class="modal-conteudo">
-    <button class="modal-fechar" id="mFechar" aria-label="Fechar">✕</button>
+    <button class="modal-fechar" onclick="fecharModal()" aria-label="Fechar">✕</button>
     <div class="modal-img-wrap">
-      <button class="seta-modal esq" id="mPrev" aria-label="Anterior">‹</button>
-      <img class="modal-img" id="modal-img" alt="">
-      <button class="seta-modal dir" id="mNext" aria-label="Próxima">›</button>
+      <button class="seta-modal esq" onclick="navModal(-1)" aria-label="Anterior">‹</button>
+      <img class="modal-img" id="modal-img" alt="" onclick="toggleZoom(event)">
+      <button class="seta-modal dir" onclick="navModal(1)" aria-label="Próxima">›</button>
     </div>
     <div class="modal-barra">
       <div class="modal-titulo" id="modal-titulo"></div>
       <span class="modal-contador" id="modal-contador"></span>
-      <button class="btn-modal" id="modal-fav">♡ Favoritar</button>
-      <button class="btn-modal" id="modal-baixar">⤓ Baixar imagem</button>
+      <button class="btn-modal" id="modal-fav" onclick="favoritarDoModal()">♡ Favoritar</button>
+      <button class="btn-modal" onclick="baixarImagemModal()">⤓ Baixar imagem</button>
     </div>
   </div>
 </div>
 
-<script type="module">
-import { AutoProcessor, CLIPVisionModelWithProjection, RawImage, env }
-  from 'https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.8.1';
+<!-- Barra favoritos -->
+<div class="barra-fav" id="barra-fav">
+  <div><span id="fav-contador">0</span> favorito(s)</div>
+  <div style="display:flex; gap:8px; flex-wrap:wrap;">
+    <button class="btn-limpar-fav" onclick="limparFavoritos()">Limpar favoritos</button>
+    <button class="btn-baixar-fav" onclick="baixarFavoritos(this)">⤓ Baixar imagens</button>
+  </div>
+</div>
 
-/* ===== CONFIG — CLIP idêntico ao gerador ===== */
-const MODELO='Xenova/clip-vit-base-patch32', DTYPE='q8', DEVICE='wasm';
-const CAT_URL='../catalogo_publicado.json';   // catálogo na raiz do repositório
-const EMB_URL='./embeddings.json';            // índice fica junto desta página
+<script>
+console.log('Catálogo ARTS v2.7 (categorias por linha)');
+// ============================================================================
+// Catálogo de Papéis de Parede — navegação por capas (3 níveis)
+// Nível 0: entrada (Adulto, Infantil, Paleta, Busca por Imagem)
+// Nível 1: subcategorias da linha escolhida (com capa)
+// Nível 2: grade de produtos da subcategoria
+// ============================================================================
 
-/* Reforço adaptativo: peso varia entre WMIN e WMAX conforme a confiança */
-const WMIN=0.35, WMAX=0.70;
-const MAX_RESULTADOS=20, MIN_RESULTADOS=8, CORTE_REL=0.15; // corte relativo ao topo
-const DEBUG = new URLSearchParams(location.search).get('debug')==='1';
+const CONFIG = {
+  arquivo: 'catalogo_publicado.json',
+  capasArq: 'capas.json',
+  maxThumbs: 4, porPagina: 60,
+  paletaUrl: 'paleta-de-cores/index.html',
+  buscaImagemUrl: 'busca-por-imagem/index.html',
+  coresFiltro: [
+    ['Azul','#4a6fa5'],['Verde','#5c7d5a'],['Rosa','#d090a8'],['Vermelho','#b94d4d'],
+    ['Amarelo','#e0c050'],['Laranja','#d88a4a'],['Roxo','#8a6aaa'],['Marrom','#8a6043'],
+    ['Bege','#d8c4a0'],['Cinza','#9a9a92'],['Branco','#f4f4f0'],['Preto','#2a2a2a'],
+    ['Dourado','#c0a050'],['Colorido','linear-gradient(135deg,#e06,#fa0,#0c8,#06f)']
+  ]
+};
 
-env.allowLocalModels=false; env.useBrowserCache=true;
+let CATALOGO = [], CAPAS = {}, TAXO = {};
+let nivel = 0;              // 0=entrada, 1=subcategorias, 2=grade
+let linhaAtual = '';       // 'adulto' | 'infantil'
+let subcatAtual = '';
+let busca = '', corFiltro = '', modoBusca = false, verFavoritos = false;
+let favoritos = new Set(JSON.parse(localStorage.getItem('arts_favoritos') || '[]'));
+let posicaoCard = {};
+let scrollSubcat = 0;      // posição de rolagem da lista de subcategorias (p/ voltar no lugar)
+let _lista = [], _render = 0;
+let modalModelo = null, modalIdx = 0, modalZoom = false;
 
-/* ===== ESTADO ===== */
-let INFO={}, CODS=[], MV=[], DIM=null, CENTROIDES={};
-let processor=null, vision=null;
-let cropper=null, ultimaQV=null;
-let favoritos=new Set(JSON.parse(localStorage.getItem('arts_favoritos')||'[]'));
-let modalModelo=null, modalIdx=0, modalZoom=false;
-const $=s=>document.querySelector(s);
-function pt(id,c){ $(id).className='pt '+(c||''); }
-
-/* ===== UTIL (compatível com o catálogo) ===== */
 function urlSegura(u){ if(!u) return ''; const i=u.indexOf('.r2.dev/'); if(i===-1) return encodeURI(u); return u.slice(0,i+8)+u.slice(i+8).split('/').map(encodeURIComponent).join('/'); }
-function esc(s){ return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
-function b64ToInt8(b64){ const bin=atob(b64); const u8=new Uint8Array(bin.length); for(let i=0;i<bin.length;i++)u8[i]=bin.charCodeAt(i); return new Int8Array(u8.buffer); }
-function l2norm(a){ let n=0; for(let i=0;i<a.length;i++)n+=a[i]*a[i]; n=Math.sqrt(n)||1; const o=new Float32Array(a.length); for(let i=0;i<a.length;i++)o[i]=a[i]/n; return o; }
-function dot(a,b){ let s=0; for(let i=0;i<a.length;i++)s+=a[i]*b[i]; return s; }
-function catsDe(m){ return [...new Set([...(m.categorias_adulto||[]),...(m.categorias_infantil||[])])]; }
-function clamp(x,a,b){ return Math.max(a,Math.min(b,x)); }
 
-/* imagens do modelo: ambiente → still → demais (igual ao catálogo) */
+async function init(){
+  CATALOGO = (await fetch(CONFIG.arquivo).then(r=>r.json()).catch(()=>null) || {}).modelos || [];
+  CAPAS = await fetch(CONFIG.capasArq).then(r=>r.json()).catch(()=>({})) || {};
+  TAXO = await fetch('taxonomia.json').then(r=>r.json()).catch(()=>({})) || {};
+  if(!CATALOGO.length){ document.getElementById('conteudo').innerHTML='<div class="vazio"><h3>Catálogo indisponível</h3></div>'; return; }
+  montarFiltroCores();
+  montarContadorFav();
+  configurarBusca();
+  document.addEventListener('keydown', teclaGlobal);
+  window.addEventListener('scroll', scrollInfinito, {passive:true});
+  // link direto para Favoritos (vindo da Busca por Imagem)
+  if(location.hash==='#favoritos') toggleVerFavoritos(); else irParaEntrada();
+}
+
+// ---- Imagens (ambiente → still → demais) ----------------------------------
 function imagensDoModelo(m){
   const imgs=[], ambs=m.ambientes_url||[], th=m.thumbs||{}, tha=th.ambientes||[];
-  if(ambs.length) imgs.push({url:urlSegura(ambs[0]), tipo:'Ambiente'});
-  if(m.still_url) imgs.push({url:urlSegura(m.still_url), tipo:'Still'});
-  for(let i=1;i<ambs.length;i++) imgs.push({url:urlSegura(ambs[i]), tipo:'Ambiente'});
-  if(m.principal){ const raw=[ambs[0],m.still_url,...ambs.slice(1)]; const idx=raw.indexOf(m.principal); if(idx>0){ const [p]=imgs.splice(idx,1); imgs.unshift(p); } }
-  if(!imgs.length) imgs.push({url:'',tipo:'Still'});
+  if(ambs.length) imgs.push({raw:ambs[0], url:urlSegura(ambs[0]), thumb:urlSegura(tha[0]||ambs[0]), tipo:'Ambiente'});
+  if(m.still_url) imgs.push({raw:m.still_url, url:urlSegura(m.still_url), thumb:urlSegura(th.still||m.still_url), tipo:'Still'});
+  for(let i=1;i<ambs.length;i++) imgs.push({raw:ambs[i], url:urlSegura(ambs[i]), thumb:urlSegura(tha[i]||ambs[i]), tipo:'Ambiente'});
+  if(m.principal){ const idx=imgs.findIndex(x=>x.raw===m.principal); if(idx>0){ const [p]=imgs.splice(idx,1); imgs.unshift(p); } }
+  if(!imgs.length) imgs.push({url:'',thumb:'',tipo:'Still'});
   return imgs;
 }
 
-/* ===== CARREGAR DADOS ===== */
-async function carregar(){
-  pt('#ptCat','busy'); pt('#ptEmb','busy');
-  try{
-    const [cat,emb]=await Promise.all([ fetch(CAT_URL).then(r=>r.json()), fetch(EMB_URL).then(r=>r.json()) ]);
-    const lista=cat.modelos||cat; INFO={}; lista.forEach(m=>INFO[m.codigo]=m);
-    pt('#ptCat','go'); $('#txCat').textContent='Catálogo';
-    DIM=emb.dim; CODS=emb.itens.map(it=>it.codigo);
-    MV=emb.itens.map(it=>l2norm(Int8Array.from(b64ToInt8(it.emb))));
-    construirCentroides();
-    pt('#ptEmb','go'); $('#txEmb').textContent='Índice visual';
-  }catch(e){ pt('#ptCat','err'); pt('#ptEmb','err'); $('#txCat').textContent='Falha ao carregar dados'; }
+// ---- Navegação ------------------------------------------------------------
+function irParaEntrada(){
+  nivel=0; linhaAtual=''; subcatAtual=''; verFavoritos=false;
+  document.getElementById('btn-favoritos').classList.remove('ativo');
+  atualizarTopo(); renderEntrada();
 }
-function construirCentroides(){
-  const acc={};
-  CODS.forEach((cod,i)=>{ const m=INFO[cod]; if(!m) return;
-    for(const c of catsDe(m)){ if(!acc[c]) acc[c]={v:new Float32Array(DIM),n:0}; const a=acc[c].v,v=MV[i]; for(let k=0;k<DIM;k++)a[k]+=v[k]; acc[c].n++; } });
-  CENTROIDES={}; for(const c in acc){ if(acc[c].n>=2) CENTROIDES[c]=l2norm(acc[c].v); }
+function entrarLinha(linha, restaurar){ nivel=1; linhaAtual=linha; subcatAtual=''; atualizarTopo(); renderSubcategorias();
+  if(restaurar){ requestAnimationFrame(()=>window.scrollTo(0, scrollSubcat)); } else { window.scrollTo(0,0); } }
+function entrarSubcat(sub){ scrollSubcat = window.scrollY; nivel=2; subcatAtual=sub; corFiltro=''; atualizarTopo(); renderGrade(); window.scrollTo(0,0); }
+function voltar(){
+  if(verFavoritos){ verFavoritos=false; document.getElementById('btn-favoritos').classList.remove('ativo'); navegarNivelAtual(); return; }
+  if(nivel===2) entrarLinha(linhaAtual, true);
+  else if(nivel===1) irParaEntrada();
+  else irParaEntrada();
 }
-async function carregarCLIP(){
-  pt('#ptMod','busy'); $('#txMod').textContent='Preparando reconhecimento…';
-  try{
-    processor=await AutoProcessor.from_pretrained(MODELO);
-    vision=await CLIPVisionModelWithProjection.from_pretrained(MODELO,{dtype:DTYPE,device:DEVICE,
-      progress_callback:p=>{ if(p.status==='progress'&&p.total){ const pct=Math.round(p.loaded/p.total*100); $('#txMod').textContent=`Preparando reconhecimento… ${pct}%`; } }});
-    pt('#ptMod','go'); $('#txMod').textContent='Pronto';
-    setTimeout(()=>{ if(MV.length&&!DEBUG) $('#boot').classList.add('oculto'); },800);
-  }catch(e){ pt('#ptMod','err'); $('#txMod').textContent='Falha no reconhecimento'; }
+function navegarNivelAtual(){
+  if(nivel===0) renderEntrada(); else if(nivel===1) renderSubcategorias(); else renderGrade();
 }
 
-/* ===== UPLOAD + RECORTE ===== */
-const drop=$('#drop'), arq=$('#arqFoto');
-drop.addEventListener('click',()=>arq.click());
-['dragover','dragenter'].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.add('over');}));
-['dragleave','drop'].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.remove('over');}));
-drop.addEventListener('drop',e=>{const f=e.dataTransfer.files[0];if(f)abrirFoto(f);});
-arq.addEventListener('change',e=>{const f=e.target.files[0];if(f)abrirFoto(f);});
-function abrirFoto(file){
-  if(!/^image\//.test(file.type)){alert('Selecione uma imagem.');return;}
-  const url=URL.createObjectURL(file); const img=$('#cropImg');
-  if(cropper){cropper.destroy();cropper=null;}
-  img.src=url; $('#drop').style.display='none'; $('#cropzone').classList.add('on');
-  img.onload=()=>{cropper=new Cropper(img,{viewMode:1,autoCropArea:0.7,background:false,responsive:true,checkOrientation:true,dragMode:'crop'});};
-}
-$('#btnTrocar').addEventListener('click',()=>{if(cropper){cropper.destroy();cropper=null;}$('#cropzone').classList.remove('on');$('#drop').style.display='block';arq.value='';});
-
-/* ===== BUSCAR ===== */
-function canvasParaURL(c){ return new Promise(res=>c.toBlob(b=>res(URL.createObjectURL(b)),'image/jpeg',0.92)); }
-$('#btnBuscar').addEventListener('click',buscar);
-async function buscar(){
-  if(!vision||!MV.length){ alert('Ainda preparando a busca. Aguarde um instante e tente de novo.'); return; }
-  if(!cropper) return;
-  const canvas=cropper.getCroppedCanvas({maxWidth:512,maxHeight:512,imageSmoothingQuality:'high'});
-  if(!canvas||!canvas.width){ alert('Selecione uma área da estampa antes de buscar.'); return; }
-  $('#btnBuscar').disabled=true; $('#btnBuscar').textContent='Buscando…';
-  try{
-    const url=await canvasParaURL(canvas);
-    const image=await RawImage.read(url); URL.revokeObjectURL(url);
-    const out=await vision(await processor(image));
-    ultimaQV=l2norm(out.image_embeds.data);
-    renderRank();
-    $('#saida').scrollIntoView({behavior:'smooth',block:'start'});
-  }catch(e){ alert('Não consegui processar a imagem. Tente outra foto.'); }
-  finally{ $('#btnBuscar').disabled=false; $('#btnBuscar').textContent='Buscar modelos parecidos'; }
+function atualizarTopo(){
+  // breadcrumb
+  const t = document.getElementById('trilha');
+  let html = `<a onclick="irParaEntrada()">Início</a>`;
+  if(linhaAtual) html += ` › <a onclick="entrarLinha('${linhaAtual}')">${linhaAtual==='adulto'?'Adulto':'Infantil'}</a>`;
+  if(subcatAtual) html += ` › ${esc(subcatAtual)}`;
+  if(verFavoritos) html = `<a onclick="irParaEntrada()">Início</a> › Favoritos`;
+  t.innerHTML = html;
+  // título topo
+  let titulo = 'Catálogo de Papéis de Parede';
+  if(verFavoritos) titulo = 'Favoritos';
+  else if(nivel===1) titulo = linhaAtual==='adulto'?'Adulto':'Infantil';
+  else if(nivel===2) titulo = subcatAtual;
+  document.getElementById('titulo-topo').textContent = titulo;
+  // botão filtro só aparece na grade
+  document.getElementById('btn-filtros').style.display = (nivel===2||verFavoritos)?'':'none';
 }
 
-/* ===== REFORÇO ADAPTATIVO ===== */
-function pesoAdaptativo(catScoresOrdenados){
-  if(!catScoresOrdenados.length) return WMIN;
-  const top1=catScoresOrdenados[0][1];
-  const prox=catScoresOrdenados.slice(1,4).map(x=>x[1]);
-  const mediaProx=prox.length? prox.reduce((a,b)=>a+b,0)/prox.length : top1;
-  // confiança absoluta (quão forte é a melhor categoria) + separação (quão acima das próximas)
-  const confNivel=clamp((top1-0.55)/(0.85-0.55),0,1);
-  const confMargem=clamp((top1-mediaProx)/0.10,0,1);
-  const confianca=0.6*confNivel+0.4*confMargem;
-  return WMIN+(WMAX-WMIN)*confianca;
+// ---- Nível 0: Entrada -----------------------------------------------------
+function renderEntrada(){
+  const qtdAd = CATALOGO.filter(m=>m.linha==='adulto'||m.linha==='ambas').length;
+  const qtdInf = CATALOGO.filter(m=>m.linha==='infantil'||m.linha==='ambas').length;
+  const cards = [
+    cardCapa('Adulto', CAPAS['Adulto'], `${qtdAd} modelos`, ()=>"entrarLinha('adulto')"),
+    cardCapa('Infantil', CAPAS['Infantil'], `${qtdInf} modelos`, ()=>"entrarLinha('infantil')"),
+    cardCapaLink('Paleta de Cores', CAPAS['_paleta'], CONFIG.paletaUrl, 'paleta'),
+    cardCapaLink('Busca por Imagem', CAPAS['_busca'], CONFIG.buscaImagemUrl, 'busca'),
+  ];
+  document.getElementById('conteudo').innerHTML = `<div class="grade-capas">${cards.join('')}</div>`;
 }
 
-function renderRank(){
-  if(!ultimaQV)return;
-  const qv=ultimaQV;
-  const catScore={}; for(const c in CENTROIDES) catScore[c]=dot(qv,CENTROIDES[c]);
-  const ordenadas=Object.entries(catScore).sort((a,b)=>b[1]-a[1]);
-  const w=pesoAdaptativo(ordenadas);
+function cardCapa(nome, capa, qtd, onclick){
+  const img = capa && capa.url ? `<img src="${urlSegura(capa.url)}" alt="${esc(nome)}">` : '';
+  return `<div class="card-capa" onclick="${onclick()}">
+    ${img}<div class="overlay"><span class="nome-capa">${esc(nome)}</span></div>
+    ${qtd?`<span class="qtd">${qtd}</span>`:''}</div>`;
+}
+function cardCapaLink(nome, capa, href, tipo){
+  const img = capa && capa.url ? `<img src="${urlSegura(capa.url)}" alt="${esc(nome)}">` : '';
+  const icone = tipo==='busca'
+    ? `<div class="icone-canto"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg></div>`
+    : `<div class="icone-canto"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="13.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="10.5" r="2.5"/><circle cx="8.5" cy="7.5" r="2.5"/><circle cx="6.5" cy="12.5" r="2.5"/><path d="M12 2a10 10 0 100 20 2 2 0 002-2c0-1-1-2-1-3s1-1 2-1h1a3 3 0 003-3 9 9 0 00-9-9z"/></svg></div>`;
+  return `<a href="${href}" class="card-capa" style="text-decoration:none;display:block;">
+    ${img}${icone}<div class="overlay"><span class="nome-capa">${esc(nome)}</span></div></a>`;
+}
 
-  if(DEBUG){
-    $('#calib').classList.add('on');
-    $('#entendeu').innerHTML=`<span class="k">Entendeu como:</span>`+
-      ordenadas.slice(0,5).map(([c,s])=>`<span class="chip"><b>${c}</b> ${(s*100).toFixed(0)}%</span>`).join('')+
-      `<span class="chip" style="border-color:var(--verde)">reforço auto <b>${Math.round(w*100)}%</b></span>`;
+// ---- Nível 1: Subcategorias -----------------------------------------------
+// categorias de um modelo numa linha (com fallback p/ formato antigo)
+function catsDaLinha(m, linha){
+  const v = m['categorias_'+linha];
+  if(Array.isArray(v)) return v;
+  return m.categorias || [];
+}
+function subcategoriasDaLinha(linha){
+  const cont = {};
+  CATALOGO.forEach(m=>{
+    if(m.linha===linha || m.linha==='ambas')
+      catsDaLinha(m, linha).forEach(c=>cont[c]=(cont[c]||0)+1);
+  });
+  const pref = linha==='adulto'?'Adulto/':'Infantil/';
+  const ocultas = new Set(TAXO.ocultas||[]);
+  return Object.entries(cont)
+    .filter(([c])=>!ocultas.has(pref+c))
+    .sort((a,b)=>a[0].localeCompare(b[0],'pt'));
+}
+function renderSubcategorias(){
+  const subs = subcategoriasDaLinha(linhaAtual);
+  if(!subs.length){ document.getElementById('conteudo').innerHTML='<div class="vazio"><h3>Sem subcategorias</h3></div>'; return; }
+  const cards = subs.map(([sub,qtd])=>{
+    const capa = CAPAS[`${linhaAtual==='adulto'?'Adulto':'Infantil'}/${sub}`];
+    const img = capa && capa.url ? `<img src="${urlSegura(capa.url)}" alt="${esc(sub)}">` : '';
+    return `<div class="card-capa" onclick="entrarSubcat('${esc(sub).replace(/'/g,"\\'")}')">
+      ${img}<div class="overlay"><span class="nome-capa">${esc(sub)}</span></div>
+      <span class="qtd">${qtd}</span></div>`;
+  });
+  // adiciona "Ver todos"
+  const totalLinha = CATALOGO.filter(m=>m.linha===linhaAtual||m.linha==='ambas').length;
+  cards.unshift(`<div class="card-capa" onclick="entrarSubcat('__todos')" style="background:linear-gradient(160deg,var(--verde),var(--verde-claro));">
+    <div class="overlay"><span class="nome-capa">Ver todos</span></div><span class="qtd">${totalLinha}</span></div>`);
+  document.getElementById('conteudo').innerHTML = `<div class="grade-capas">${cards.join('')}</div>`;
+}
+
+// ---- Nível 2: Grade de produtos -------------------------------------------
+function modelosFiltrados(){
+  let lista = CATALOGO;
+  if(verFavoritos){ lista = lista.filter(m=>favoritos.has(m.codigo)); }
+  else {
+    if(linhaAtual) lista = lista.filter(m=>m.linha===linhaAtual||m.linha==='ambas');
+    if(subcatAtual && subcatAtual!=='__todos') lista = lista.filter(m=>catsDaLinha(m, linhaAtual).includes(subcatAtual));
   }
-
-  let lista=CODS.map((cod,i)=>{
-    const vis=dot(qv,MV[i]);
-    const cats=catsDe(INFO[cod]||{}).filter(c=>CENTROIDES[c]);
-    let aff=vis; if(cats.length){ let s=0; for(const c of cats)s+=catScore[c]; aff=s/cats.length; }
-    return {cod, score:(1-w)*vis + w*aff};
-  });
-  lista.sort((a,b)=>b.score-a.score);
-
-  // corte relativo ao topo (descarta cauda fraca), garantindo um mínimo
-  const best=lista[0].score;
-  let corte=lista.filter(r=>r.score>=best-CORTE_REL);
-  if(corte.length<MIN_RESULTADOS) corte=lista.slice(0,MIN_RESULTADOS);
-  corte=corte.slice(0,MAX_RESULTADOS);
-
-  const saida=$('#saida');
-  if(!corte.length){ saida.innerHTML=`<div class="vazio"><h3>Nada parecido encontrado</h3><p>Tente recortar só a estampa, sem móveis.</p></div>`; return; }
-  saida.innerHTML=`<div class="res-info">${corte.length} modelo${corte.length>1?'s':''} parecido${corte.length>1?'s':''}</div><div class="grade" id="grade"></div>`;
-  const g=$('#grade');
-  g.innerHTML=corte.map(r=>cardHTML(INFO[r.cod], r.score)).join('');
-  g.querySelectorAll('.card').forEach(el=>{
-    const cod=el.dataset.cod;
-    el.querySelector('.palco').addEventListener('click',()=>abrirModal(cod));
-    el.querySelector('.btn-coracao').addEventListener('click',e=>{e.stopPropagation();toggleFavorito(cod);});
-  });
+  if(corFiltro) lista = lista.filter(m=>(m.cores_familias||[]).includes(corFiltro));
+  if(busca){ const q=busca.toLowerCase(); lista=lista.filter(m=>[m.nome,...catsDaLinha(m,'adulto'),...catsDaLinha(m,'infantil'),...(m.tags||[]),...(m.keywords_pt||[]),...(m.cores_tons||[]),...(m.cores_familias||[]),...(m.publico||[])].join(' ').toLowerCase().includes(q)); }
+  return lista;
+}
+function renderGrade(){
+  _lista = modelosFiltrados(); _render = 0;
+  const c = document.getElementById('conteudo');
+  if(!_lista.length){ c.innerHTML = verFavoritos
+    ? '<div class="vazio"><h3>Nenhum favorito ainda</h3><p>Toque no coração dos modelos para salvá-los aqui.</p></div>'
+    : '<div class="vazio"><h3>Nada encontrado</h3><p>Ajuste a busca ou os filtros.</p></div>';
+    atualizarBarraFav(); return; }
+  c.innerHTML = `<div class="resultado-info">${_lista.length} modelo${_lista.length>1?'s':''}</div><div class="grade" id="grade"></div>`;
+  renderMais(); atualizarBarraFav();
+}
+function renderMais(){
+  const g = document.getElementById('grade'); if(!g) return;
+  const fim = Math.min(_render+CONFIG.porPagina, _lista.length);
+  g.insertAdjacentHTML('beforeend', _lista.slice(_render,fim).map(card).join(''));
+  _render = fim;
+}
+function scrollInfinito(){
+  if(nivel!==2 && !verFavoritos) return;
+  if(_render>=_lista.length) return;
+  if(window.innerHeight+window.scrollY >= document.body.offsetHeight-600) renderMais();
 }
 
-function cardHTML(m, score){
-  if(!m) return '';
-  const imgs=imagensDoModelo(m), img=imgs[0];
-  const fav=favoritos.has(m.codigo);
-  const imgHtml=img.url?`<img src="${img.url}" alt="${esc(m.alt_text||m.nome)}" loading="lazy">`:'';
+function card(m){
+  const imgs=imagensDoModelo(m), idx=posicaoCard[m.codigo]||0, img=imgs[Math.min(idx,imgs.length-1)];
+  const ehFav=favoritos.has(m.codigo), varias=imgs.length>1;
+  const imgHtml = img.url?`<img src="${img.url}" alt="${esc(m.alt_text||m.nome)}" loading="lazy">`:`<div class="placeholder"></div>`;
   return `<div class="card" data-cod="${m.codigo}">
-    <div class="palco">
-      ${imgHtml}
-      <span class="afinidade ${DEBUG?'on':''}">${Math.round(score*100)}%</span>
-      <button class="btn-coracao ${fav?'fav':''}" aria-label="Favoritar">${fav?'♥':'♡'}</button>
+    <div class="palco" onclick="abrirModal('${m.codigo}')">
+      ${imgHtml}<span class="badge-tipo">${img.tipo}</span>
+      ${varias?`<span class="contador-img">${idx+1}/${imgs.length}</span>`:''}
+      ${varias?`<button class="seta esq" onclick="event.stopPropagation();navCard('${m.codigo}',-1)">‹</button><button class="seta dir" onclick="event.stopPropagation();navCard('${m.codigo}',1)">›</button>`:''}
+      <button class="btn-coracao ${ehFav?'fav':''}" onclick="event.stopPropagation();toggleFavorito('${m.codigo}')" aria-label="Favoritar">${ehFav?'♥':'♡'}</button>
     </div>
     <div class="rodape-card">
+      <div class="thumbs">${montarThumbs(m,imgs,idx)}</div>
       <h3 class="nome-modelo">${esc(m.nome)}</h3>
-      <div class="cats-card">${esc((catsDe(m)[0])||'')}</div>
     </div>
   </div>`;
 }
+function montarThumbs(m,imgs,idx){
+  const slots=3; let ini=0;
+  // se houver mais que 3 imagens, desliza a janela mantendo a ativa visível
+  if(imgs.length>slots) ini=Math.max(0, Math.min(idx-1, imgs.length-slots));
+  let html='';
+  for(let s=0;s<slots;s++){ const i=ini+s;
+    if(i<imgs.length){ const t=imgs[i];
+      const cont=t.thumb?`<img src="${t.thumb}" alt="">`:`<div style="width:100%;height:100%;background:var(--areia)"></div>`;
+      html+=`<div class="thumb ${i===idx?'ativo':''}" onclick="event.stopPropagation();irParaImagem('${m.codigo}',${i})">${cont}</div>`;
+    } else {
+      html+=`<div class="thumb t-vazio" aria-hidden="true"></div>`; // slot em branco (mantém o tamanho padrão)
+    }
+  }
+  return html;
+}
+function navCard(cod,dir){ const m=CATALOGO.find(x=>x.codigo===cod); const total=imagensDoModelo(m).length; let i=(posicaoCard[cod]||0)+dir; posicaoCard[cod]=(i+total)%total; trocarImagemCard(cod); }
+function irParaImagem(cod,i){ posicaoCard[cod]=i; trocarImagemCard(cod); }
+// Atualiza só a imagem/contador/thumbs no lugar, sem recriar o card
+function trocarImagemCard(cod){
+  const el=document.querySelector(`.card[data-cod="${cod}"]`); if(!el) return;
+  const m=CATALOGO.find(x=>x.codigo===cod), imgs=imagensDoModelo(m);
+  const idx=Math.min(posicaoCard[cod]||0, imgs.length-1), img=imgs[idx];
+  const palco=el.querySelector('.palco'), imgEl=palco&&palco.querySelector('img');
+  if(imgEl && img.url) imgEl.src=img.url;
+  const badge=palco&&palco.querySelector('.badge-tipo'); if(badge) badge.textContent=img.tipo;
+  const cont=palco&&palco.querySelector('.contador-img'); if(cont) cont.textContent=`${idx+1}/${imgs.length}`;
+  const thumbsEl=el.querySelector('.thumbs'); if(thumbsEl) thumbsEl.innerHTML=montarThumbs(m,imgs,idx);
+}
+function atualizarCard(cod){ const el=document.querySelector(`.card[data-cod="${cod}"]`); if(!el) return; const m=CATALOGO.find(x=>x.codigo===cod); const n=document.createElement('div'); n.innerHTML=card(m); el.replaceWith(n.firstElementChild); }
 
-/* ===== MODAL (igual ao catálogo) ===== */
-function abrirModal(cod){ modalModelo=INFO[cod]; modalIdx=0; modalZoom=false; atualizarModal(); $('#modal').classList.add('aberto'); document.body.style.overflow='hidden'; }
-function atualizarModal(){
-  const imgs=imagensDoModelo(modalModelo), img=imgs[modalIdx], el=$('#modal-img');
+// ---- Modal ----------------------------------------------------------------
+function abrirModal(cod){ modalModelo=CATALOGO.find(x=>x.codigo===cod); modalIdx=posicaoCard[cod]||0; modalZoom=false; atualizarModal(); document.getElementById('modal').classList.add('aberto'); document.body.style.overflow='hidden'; }
+function atualizarModal(){ const imgs=imagensDoModelo(modalModelo), img=imgs[modalIdx], el=document.getElementById('modal-img');
   if(img.url){ el.src=img.url; el.style.cssText=''; } else { el.removeAttribute('src'); el.style.cssText='width:70vw;height:60vh;background:var(--areia)'; }
   el.classList.remove('zoom'); el.style.transform='';
-  $('#modal-titulo').textContent=modalModelo.nome;
-  $('#modal-contador').textContent=`${img.tipo} · ${modalIdx+1}/${imgs.length}`;
-  const fav=favoritos.has(modalModelo.codigo), btn=$('#modal-fav');
-  btn.innerHTML=fav?'♥ Favoritado':'♡ Favoritar'; btn.classList.toggle('fav',fav);
-  $('#mPrev').style.display=$('#mNext').style.display=imgs.length>1?'':'none';
-}
-function navModal(d){ const t=imagensDoModelo(modalModelo).length; modalIdx=(modalIdx+d+t)%t; modalZoom=false; atualizarModal(); }
-function fecharModal(){ $('#modal').classList.remove('aberto'); document.body.style.overflow=''; }
-$('#mFechar').addEventListener('click',fecharModal);
-$('#mPrev').addEventListener('click',()=>navModal(-1));
-$('#mNext').addEventListener('click',()=>navModal(1));
-$('#modal').addEventListener('click',e=>{ if(e.target===$('#modal')) fecharModal(); });
-$('#modal-img').addEventListener('click',e=>{ modalZoom=!modalZoom; e.target.style.transform=modalZoom?'scale(2)':''; e.target.classList.toggle('zoom',modalZoom); });
-$('#modal-fav').addEventListener('click',()=>{ toggleFavorito(modalModelo.codigo); atualizarModal(); });
-$('#modal-baixar').addEventListener('click',async()=>{ const img=imagensDoModelo(modalModelo)[modalIdx]; if(!img.url)return; await baixarArquivo(img.url,`${modalModelo.codigo}_${modalIdx+1}.jpg`); });
-async function baixarArquivo(url,nome){ try{ const b=await(await fetch(url)).blob(); const u=URL.createObjectURL(b); const a=document.createElement('a'); a.href=u; a.download=nome; document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(u); }catch(e){ window.open(url,'_blank'); } }
-document.addEventListener('keydown',e=>{ if(!$('#modal').classList.contains('aberto'))return; if(e.key==='Escape')fecharModal(); if(e.key==='ArrowLeft')navModal(-1); if(e.key==='ArrowRight')navModal(1); });
+  document.getElementById('modal-titulo').textContent=modalModelo.nome;
+  document.getElementById('modal-contador').textContent=`${img.tipo} · ${modalIdx+1}/${imgs.length}`;
+  const fav=favoritos.has(modalModelo.codigo), btn=document.getElementById('modal-fav');
+  btn.innerHTML=fav?'♥ Favoritado':'♡ Favoritar'; btn.classList.toggle('fav',fav); }
+function navModal(dir){ const total=imagensDoModelo(modalModelo).length; modalIdx=(modalIdx+dir+total)%total; modalZoom=false; atualizarModal(); }
+function fecharModal(){ document.getElementById('modal').classList.remove('aberto'); document.body.style.overflow=''; if(modalModelo){ posicaoCard[modalModelo.codigo]=modalIdx; atualizarCard(modalModelo.codigo);} }
+function toggleZoom(e){ const img=e.target; modalZoom=!modalZoom; img.style.transform=modalZoom?'scale(2)':''; img.classList.toggle('zoom',modalZoom); }
+function favoritarDoModal(){ toggleFavorito(modalModelo.codigo); atualizarModal(); }
+async function baixarImagemModal(){ const img=imagensDoModelo(modalModelo)[modalIdx]; if(!img.url){alert('Imagem de exemplo.');return;} await baixarArquivo(img.url, `${modalModelo.codigo}_${modalIdx+1}.jpg`); }
 
-/* ===== FAVORITOS (compartilhados com o catálogo) ===== */
-function toggleFavorito(cod){
-  if(favoritos.has(cod)) favoritos.delete(cod); else favoritos.add(cod);
-  localStorage.setItem('arts_favoritos', JSON.stringify([...favoritos]));
-  // atualiza coração do card, se visível
-  const el=document.querySelector(`.card[data-cod="${cod}"] .btn-coracao`);
-  if(el){ const f=favoritos.has(cod); el.classList.toggle('fav',f); el.innerHTML=f?'♥':'♡'; }
-}
+// ---- Favoritos ------------------------------------------------------------
+function toggleFavorito(cod){ if(favoritos.has(cod)) favoritos.delete(cod); else favoritos.add(cod);
+  localStorage.setItem('arts_favoritos', JSON.stringify([...favoritos])); montarContadorFav();
+  registrarEvento('favoritar',cod);
+  if(verFavoritos) renderGrade(); else atualizarCard(cod); atualizarBarraFav(); }
+function montarContadorFav(){ const c=document.getElementById('cont-fav'); c.textContent=favoritos.size; c.style.display=favoritos.size?'':'none'; }
+function toggleVerFavoritos(){ verFavoritos=!verFavoritos; document.getElementById('btn-favoritos').classList.toggle('ativo',verFavoritos);
+  atualizarTopo(); if(verFavoritos){ nivel=2; renderGrade(); } else irParaEntrada(); window.scrollTo(0,0); }
+function atualizarBarraFav(){ document.getElementById('barra-fav').classList.toggle('visivel', verFavoritos && favoritos.size>0); document.getElementById('fav-contador').textContent=favoritos.size; }
+function limparFavoritos(){ if(!confirm('Remover todos os favoritos?')) return; favoritos.clear(); localStorage.setItem('arts_favoritos','[]'); montarContadorFav(); renderGrade(); }
 
-/* ===== INÍCIO ===== */
-carregar();
-carregarCLIP();
+// ---- Busca / Filtros ------------------------------------------------------
+function toggleBusca(){ modoBusca=!modoBusca; const be=document.getElementById('busca-expandida'), tt=document.getElementById('titulo-topo');
+  be.classList.toggle('aberta',modoBusca); if(tt) tt.style.display=modoBusca?'none':'';
+  document.getElementById('btn-busca').classList.toggle('ativo',modoBusca);
+  if(modoBusca) document.getElementById('busca').focus(); else { document.getElementById('busca').value=''; busca=''; if(nivel===2||verFavoritos) renderGrade(); } }
+function configurarBusca(){ const inp=document.getElementById('busca'); let t;
+  inp.addEventListener('input',()=>{ clearTimeout(t); t=setTimeout(()=>{ busca=inp.value.trim();
+    if(busca && nivel<2 && !verFavoritos){ nivel=2; subcatAtual=''; if(!linhaAtual) linhaAtual=''; atualizarTopo(); }
+    renderGrade(); },180); }); }
+function toggleFiltros(){ document.getElementById('painel-filtros').classList.toggle('aberto'); }
+function montarFiltroCores(){ const usadas=new Set(); CATALOGO.forEach(m=>(m.cores_familias||[]).forEach(c=>usadas.add(c)));
+  const wrap=document.getElementById('cores-filtro');
+  CONFIG.coresFiltro.filter(([n])=>usadas.has(n)).forEach(([nome,cor])=>{ const b=document.createElement('div');
+    b.className='bolinha'; b.title=nome; b.style.background=cor; b.onclick=()=>filtrarCor(nome,b); wrap.appendChild(b); }); }
+function filtrarCor(cor,el){ corFiltro=(corFiltro===cor)?'':cor; document.querySelectorAll('.bolinha').forEach(b=>b.classList.remove('ativo')); if(corFiltro) el.classList.add('ativo'); renderGrade(); }
+
+// ---- Download favoritos (imagens individuais) -----------------------------
+async function baixarFavoritos(btn){
+  if(!favoritos.size){ alert('Adicione favoritos primeiro.'); return; }
+  // monta a fila com todas as imagens reais dos favoritos
+  const fila=[];
+  for(const cod of favoritos){ const m=CATALOGO.find(x=>x.codigo===cod); if(!m) continue;
+    imagensDoModelo(m).filter(i=>i.url).forEach((img,i)=>{
+      const ext=(img.url.split('.').pop()||'jpg').split('?')[0];
+      fila.push({url:img.url, nome:`${m.codigo}_${i+1}.${ext}`});
+    });
+  }
+  if(!fila.length){ alert('Imagens de exemplo (sem arquivo real).'); return; }
+  const txt = btn ? btn.textContent : '';
+  if(btn) btn.disabled = true;
+  for(let i=0;i<fila.length;i++){
+    if(btn) btn.textContent = `Baixando ${i+1}/${fila.length}…`;
+    await baixarArquivo(fila[i].url, fila[i].nome);
+    await new Promise(r=>setTimeout(r, 400)); // intervalo para o navegador do celular salvar cada imagem
+  }
+  if(btn){ btn.textContent = txt; btn.disabled = false; }
+  registrarEvento('baixar_favoritos', fila.length);
+}
+async function baixarArquivo(url,nome){ try{ const b=await(await fetch(url)).blob(); const u=URL.createObjectURL(b);
+  const a=document.createElement('a'); a.href=u; a.download=nome; document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(u);
+  }catch(e){ window.open(url,'_blank'); } }
+
+function teclaGlobal(e){ if(!document.getElementById('modal').classList.contains('aberto')) return;
+  if(e.key==='Escape') fecharModal(); if(e.key==='ArrowLeft') navModal(-1); if(e.key==='ArrowRight') navModal(1); }
+function registrarEvento(nome,valor){ if(typeof gtag==='function') gtag('event',nome,{modelo:valor}); }
+function esc(s){ return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+init();
+
 </script>
 </body>
 </html>
