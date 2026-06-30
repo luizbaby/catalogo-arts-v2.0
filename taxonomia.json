@@ -1,0 +1,29 @@
+{
+  "adicionadas_adulto": [
+    "Animais",
+    "Cozinha"
+  ],
+  "adicionadas_infantil": [
+    "Chevron",
+    "Praia"
+  ],
+  "ocultas": [
+    "Adulto/Boiserie",
+    "Adulto/Mapa-Múndi",
+    "Infantil/Madeira",
+    "Infantil/Art Déco",
+    "Infantil/Boho",
+    "Infantil/Mapa",
+    "Adulto/Toile de Jouy",
+    "Infantil/Toile de Jouy",
+    "Infantil/Rústico",
+    "Infantil/Arabesco",
+    "Infantil/Ripado",
+    "Infantil/Praia",
+    "Adulto/Boho",
+    "Infantil/3D",
+    "Adulto/Borboletas",
+    "Adulto/Bichinhos",
+    "Adulto/Quadriculado"
+  ]
+}

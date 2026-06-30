@@ -1,0 +1,302 @@
+{
+  "Adulto": {
+    "tipo": "modelo",
+    "url": "https://pub-28ad38eae8854ff2b45c924bcb2bfa2b.r2.dev/Art Mata Areia.jpg"
+  },
+  "Infantil": {
+    "tipo": "modelo",
+    "url": "https://pub-28ad38eae8854ff2b45c924bcb2bfa2b.r2.dev/Arca de Noé.jpg"
+  },
+  "_paleta": {
+    "tipo": "url",
+    "url": "https://s3.amazonaws.com/tiny-anexos-us/erp/NTEyNTg1OTkz/3f99e24d968253d1d82574cff16b8e1c.jpg"
+  },
+  "Adulto/3D": {
+    "tipo": "modelo",
+    "url": "https://pub-28ad38eae8854ff2b45c924bcb2bfa2b.r2.dev/3D Triângulos Branco.jpg"
+  },
+  "Adulto/Abstrato": {
+    "tipo": "modelo",
+    "url": "https://pub-28ad38eae8854ff2b45c924bcb2bfa2b.r2.dev/Abstrato Maze Mocha Mousse.jpg"
+  },
+  "Adulto/Arabesco": {
+    "tipo": "modelo",
+    "url": "https://pub-28ad38eae8854ff2b45c924bcb2bfa2b.r2.dev/Escandinavo Leaves Areia.jpg"
+  },
+  "Adulto/Art Déco": {
+    "tipo": "modelo",
+    "url": "https://pub-28ad38eae8854ff2b45c924bcb2bfa2b.r2.dev/Geométrico Maya Verde.jpg"
+  },
+  "Adulto/Bichinhos": {
+    "tipo": "modelo",
+    "url": "https://pub-28ad38eae8854ff2b45c924bcb2bfa2b.r2.dev/Retrato da Floresta Verde.jpg"
+  },
+  "Adulto/Boho": {
+    "tipo": "modelo",
+    "url": "https://pub-28ad38eae8854ff2b45c924bcb2bfa2b.r2.dev/Toras Abstratas Verde.jpg"
+  },
+  "Adulto/Borboletas": {
+    "tipo": "modelo",
+    "url": "https://pub-28ad38eae8854ff2b45c924bcb2bfa2b.r2.dev/Fancy Beija Flor e Joaninhas.jpg"
+  },
+  "Adulto/Chinoiserie": {
+    "tipo": "modelo",
+    "url": "https://pub-28ad38eae8854ff2b45c924bcb2bfa2b.r2.dev/Flores e Pássaros Areia.jpg"
+  },
+  "Adulto/Cimento Queimado": {
+    "tipo": "modelo",
+    "url": "https://pub-28ad38eae8854ff2b45c924bcb2bfa2b.r2.dev/Textura Desgastada Cinza.jpg"
+  },
+  "Adulto/Degradê": {
+    "tipo": "modelo",
+    "url": "https://pub-28ad38eae8854ff2b45c924bcb2bfa2b.r2.dev/Textura Degrade Grafite.jpg"
+  },
+  "Adulto/Floral": {
+    "tipo": "modelo",
+    "url": "https://pub-28ad38eae8854ff2b45c924bcb2bfa2b.r2.dev/Botanical.jpg"
+  },
+  "Adulto/Floresta": {
+    "tipo": "modelo",
+    "url": "https://pub-28ad38eae8854ff2b45c924bcb2bfa2b.r2.dev/Mata Natural.jpg"
+  },
+  "Adulto/Folhagem": {
+    "tipo": "modelo",
+    "url": "https://pub-28ad38eae8854ff2b45c924bcb2bfa2b.r2.dev/Folhagem em Muro Rústico Terracota.jpg"
+  },
+  "Adulto/Fundo do Mar": {
+    "tipo": "modelo",
+    "url": "https://pub-28ad38eae8854ff2b45c924bcb2bfa2b.r2.dev/Surf Girls (STILL).jpg"
+  },
+  "Adulto/Boiserie": {
+    "tipo": "modelo",
+    "url": "https://pub-28ad38eae8854ff2b45c924bcb2bfa2b.r2.dev/Ripado Largo Liso Branco (STILL).jpg"
+  },
+  "Adulto/Gamer": {
+    "tipo": "modelo",
+    "url": "https://pub-28ad38eae8854ff2b45c924bcb2bfa2b.r2.dev/3D Geométrico Gamer Azul.jpg"
+  },
+  "Adulto/Geométrico": {
+    "tipo": "modelo",
+    "url": "https://pub-28ad38eae8854ff2b45c924bcb2bfa2b.r2.dev/Chevron Clean Verde.jpg"
+  },
+  "Adulto/Granilite": {
+    "tipo": "modelo",
+    "url": "https://pub-28ad38eae8854ff2b45c924bcb2bfa2b.r2.dev/Granilite Creme.jpg"
+  },
+  "Adulto/Listrado": {
+    "tipo": "modelo",
+    "url": "https://pub-28ad38eae8854ff2b45c924bcb2bfa2b.r2.dev/Listrado Texturizado Areia 2.jpg"
+  },
+  "Adulto/Madeira": {
+    "tipo": "modelo",
+    "url": "https://pub-28ad38eae8854ff2b45c924bcb2bfa2b.r2.dev/Madeira Branca (1).jpg"
+  },
+  "Adulto/Mapa": {
+    "tipo": "modelo",
+    "url": "https://pub-28ad38eae8854ff2b45c924bcb2bfa2b.r2.dev/Mapa do Mundo Areia.jpg"
+  },
+  "Adulto/Mármore": {
+    "tipo": "modelo",
+    "url": "https://pub-28ad38eae8854ff2b45c924bcb2bfa2b.r2.dev/Mármore Calacata Dourado.jpg"
+  },
+  "Adulto/Medalhão": {
+    "tipo": "modelo",
+    "url": "https://pub-28ad38eae8854ff2b45c924bcb2bfa2b.r2.dev/Medalhão Desgastado Areia.jpg"
+  },
+  "Adulto/Paisagem": {
+    "tipo": "modelo",
+    "url": "https://pub-28ad38eae8854ff2b45c924bcb2bfa2b.r2.dev/Capim dos Pampas.jpg"
+  },
+  "Adulto/Pedras": {
+    "tipo": "modelo",
+    "url": "https://pub-28ad38eae8854ff2b45c924bcb2bfa2b.r2.dev/Pedra Canjiquinha.jpg"
+  },
+  "Adulto/Ripado": {
+    "tipo": "modelo",
+    "url": "https://pub-28ad38eae8854ff2b45c924bcb2bfa2b.r2.dev/Ripado 3x1 Branco.jpg"
+  },
+  "Adulto/Rústico": {
+    "tipo": "modelo",
+    "url": "https://pub-28ad38eae8854ff2b45c924bcb2bfa2b.r2.dev/Concreto Aparente Textura.jpg"
+  },
+  "Adulto/Textura": {
+    "tipo": "modelo",
+    "url": "https://pub-28ad38eae8854ff2b45c924bcb2bfa2b.r2.dev/Linho (STILL).jpg"
+  },
+  "Adulto/Tijolinho": {
+    "tipo": "modelo",
+    "url": "https://pub-28ad38eae8854ff2b45c924bcb2bfa2b.r2.dev/Tijolinho Branco.jpg"
+  },
+  "Adulto/Toile de Jouy": {
+    "tipo": "modelo",
+    "url": "https://pub-28ad38eae8854ff2b45c924bcb2bfa2b.r2.dev/Folhagem Azul Monocromático (STILL).jpg"
+  },
+  "Adulto/Tropical": {
+    "tipo": "modelo",
+    "url": "https://pub-28ad38eae8854ff2b45c924bcb2bfa2b.r2.dev/Mata Tropical.jpg"
+  },
+  "Adulto/Vintage": {
+    "tipo": "modelo",
+    "url": "https://pub-28ad38eae8854ff2b45c924bcb2bfa2b.r2.dev/Primavera Garden Areia.jpg"
+  },
+  "Adulto/Xadrez": {
+    "tipo": "modelo",
+    "url": "https://pub-28ad38eae8854ff2b45c924bcb2bfa2b.r2.dev/Xadrez Lux Camurça.jpg"
+  },
+  "Adulto/Animais": {
+    "tipo": "modelo",
+    "url": "https://pub-28ad38eae8854ff2b45c924bcb2bfa2b.r2.dev/Cisnes Verde.jpg"
+  },
+  "Adulto/Cozinha": {
+    "tipo": "modelo",
+    "url": "https://pub-28ad38eae8854ff2b45c924bcb2bfa2b.r2.dev/Azulejos Portugueses Azul.jpg"
+  },
+  "Infantil/3D": {
+    "tipo": "modelo",
+    "url": "https://pub-28ad38eae8854ff2b45c924bcb2bfa2b.r2.dev/Hipnose Cinza.jpg"
+  },
+  "Infantil/Abstrato": {
+    "tipo": "modelo",
+    "url": "https://pub-28ad38eae8854ff2b45c924bcb2bfa2b.r2.dev/Abstrato Folhagem.jpg"
+  },
+  "Infantil/Arabesco": {
+    "tipo": "modelo",
+    "url": "https://pub-28ad38eae8854ff2b45c924bcb2bfa2b.r2.dev/Escandinavo Leaves Areia.jpg"
+  },
+  "Infantil/Arco-Íris": {
+    "tipo": "modelo",
+    "url": "https://pub-28ad38eae8854ff2b45c924bcb2bfa2b.r2.dev/Arco Íris Delicado.jpg"
+  },
+  "Infantil/Bailarina": {
+    "tipo": "modelo",
+    "url": "https://pub-28ad38eae8854ff2b45c924bcb2bfa2b.r2.dev/Infantil Bailarinas no Parque (STILL).jpg"
+  },
+  "Infantil/Balões": {
+    "tipo": "modelo",
+    "url": "https://pub-28ad38eae8854ff2b45c924bcb2bfa2b.r2.dev/Balões e Aviões nas Nuvens.jpg"
+  },
+  "Infantil/Bichinhos": {
+    "tipo": "modelo",
+    "url": "https://pub-28ad38eae8854ff2b45c924bcb2bfa2b.r2.dev/Safari Bichinhos na Floresta.jpg"
+  },
+  "Infantil/Boiserie e Lambri": {
+    "tipo": "modelo",
+    "url": "https://pub-28ad38eae8854ff2b45c924bcb2bfa2b.r2.dev/Lambri Branco.jpg"
+  },
+  "Infantil/Borboletas": {
+    "tipo": "modelo",
+    "url": "https://pub-28ad38eae8854ff2b45c924bcb2bfa2b.r2.dev/Jardim das Borboletas.jpg"
+  },
+  "Infantil/Carrinhos": {
+    "tipo": "modelo",
+    "url": "https://pub-28ad38eae8854ff2b45c924bcb2bfa2b.r2.dev/Carrinhos Infantil Aquarela.jpg"
+  },
+  "Infantil/Chevron": {
+    "tipo": "modelo",
+    "url": "https://pub-28ad38eae8854ff2b45c924bcb2bfa2b.r2.dev/Chevron Slim Cinza.jpg"
+  },
+  "Infantil/Cimento Queimado": {
+    "tipo": "modelo",
+    "url": "https://pub-28ad38eae8854ff2b45c924bcb2bfa2b.r2.dev/Cimento Queimado Rose.jpg"
+  },
+  "Infantil/Degradê": {
+    "tipo": "modelo",
+    "url": "https://pub-28ad38eae8854ff2b45c924bcb2bfa2b.r2.dev/Textura Degrade Rosa e Tiffany.jpg"
+  },
+  "Infantil/Dinossauros": {
+    "tipo": "modelo",
+    "url": "https://pub-28ad38eae8854ff2b45c924bcb2bfa2b.r2.dev/Era dos Dinossauros.jpg"
+  },
+  "Infantil/Esportes": {
+    "tipo": "modelo",
+    "url": "https://pub-28ad38eae8854ff2b45c924bcb2bfa2b.r2.dev/Esportes Cimento Queimado.jpg"
+  },
+  "Infantil/Estrelas": {
+    "tipo": "modelo",
+    "url": "https://pub-28ad38eae8854ff2b45c924bcb2bfa2b.r2.dev/Estrelado Azul.jpg"
+  },
+  "Infantil/Fazenda": {
+    "tipo": "modelo",
+    "url": "https://pub-28ad38eae8854ff2b45c924bcb2bfa2b.r2.dev/Fazenda Infantil.jpg"
+  },
+  "Infantil/Floral": {
+    "tipo": "modelo",
+    "url": "https://pub-28ad38eae8854ff2b45c924bcb2bfa2b.r2.dev/Floral Aquarela com Borboletas (STILL).jpg"
+  },
+  "Infantil/Floresta": {
+    "tipo": "modelo",
+    "url": "https://pub-28ad38eae8854ff2b45c924bcb2bfa2b.r2.dev/Floresta Aquarela.jpg"
+  },
+  "Infantil/Folhagem": {
+    "tipo": "modelo",
+    "url": "https://pub-28ad38eae8854ff2b45c924bcb2bfa2b.r2.dev/Borboletas em Jardim Suspenso.jpg"
+  },
+  "Infantil/Fundo do Mar": {
+    "tipo": "modelo",
+    "url": "https://pub-28ad38eae8854ff2b45c924bcb2bfa2b.r2.dev/Mergulho no Fundo do Mar (STILL).jpg"
+  },
+  "Infantil/Galáxia": {
+    "tipo": "modelo",
+    "url": "https://pub-28ad38eae8854ff2b45c924bcb2bfa2b.r2.dev/Astronauta Azul.jpg"
+  },
+  "Infantil/Gamer": {
+    "tipo": "modelo",
+    "url": "https://pub-28ad38eae8854ff2b45c924bcb2bfa2b.r2.dev/3D Geométrico Gamer Rosa.jpg"
+  },
+  "Infantil/Geométrico": {
+    "tipo": "modelo",
+    "url": "https://pub-28ad38eae8854ff2b45c924bcb2bfa2b.r2.dev/Geométrico Losangos Camurça.jpg"
+  },
+  "Infantil/Granilite": {
+    "tipo": "modelo",
+    "url": "https://pub-28ad38eae8854ff2b45c924bcb2bfa2b.r2.dev/Confetti Gold Rose.jpg"
+  },
+  "Infantil/Listrado": {
+    "tipo": "modelo",
+    "url": "https://pub-28ad38eae8854ff2b45c924bcb2bfa2b.r2.dev/Listras Verticais Aquarela Laranja.jpg"
+  },
+  "Infantil/Mapa-Múndi": {
+    "tipo": "modelo",
+    "url": "https://pub-28ad38eae8854ff2b45c924bcb2bfa2b.r2.dev/Mapa Mundi Infantil Azul.jpg"
+  },
+  "Infantil/Nuvens": {
+    "tipo": "modelo",
+    "url": "https://pub-28ad38eae8854ff2b45c924bcb2bfa2b.r2.dev/Céu Azul.jpg"
+  },
+  "Infantil/Paisagem": {
+    "tipo": "modelo",
+    "url": "https://pub-28ad38eae8854ff2b45c924bcb2bfa2b.r2.dev/Paisagem Aquarela (STILL).jpg"
+  },
+  "Infantil/Poá": {
+    "tipo": "modelo",
+    "url": "https://pub-28ad38eae8854ff2b45c924bcb2bfa2b.r2.dev/Bolinhas de Tinta Coloridas 2.jpg"
+  },
+  "Infantil/Quadriculado": {
+    "tipo": "modelo",
+    "url": "https://pub-28ad38eae8854ff2b45c924bcb2bfa2b.r2.dev/Quadriculado Riscado Branco.jpg"
+  },
+  "Infantil/Safari": {
+    "tipo": "modelo",
+    "url": "https://pub-28ad38eae8854ff2b45c924bcb2bfa2b.r2.dev/Cute Safari Aquarela.jpg"
+  },
+  "Infantil/Textura": {
+    "tipo": "modelo",
+    "url": "https://pub-28ad38eae8854ff2b45c924bcb2bfa2b.r2.dev/Linho Rosa (STILL).jpg"
+  },
+  "Infantil/Tropical": {
+    "tipo": "modelo",
+    "url": "https://pub-28ad38eae8854ff2b45c924bcb2bfa2b.r2.dev/Surf Girls (STILL).jpg"
+  },
+  "Infantil/Unicórnio": {
+    "tipo": "modelo",
+    "url": "https://pub-28ad38eae8854ff2b45c924bcb2bfa2b.r2.dev/Cute Unicórnios.jpg"
+  },
+  "Infantil/Vintage": {
+    "tipo": "modelo",
+    "url": "https://pub-28ad38eae8854ff2b45c924bcb2bfa2b.r2.dev/Vintage Kids.jpg"
+  },
+  "Infantil/Xadrez": {
+    "tipo": "modelo",
+    "url": "https://pub-28ad38eae8854ff2b45c924bcb2bfa2b.r2.dev/Xadrez Estonado Soft Areia.jpg"
+  }
+}
